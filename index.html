@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Divya | A Promise Written in Ashes & Actions</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Great+Vibes&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Rozha+One&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        velvet: {
+                            900: '#0d0408',
+                            800: '#180710',
+                            700: '#280c1b',
+                            600: '#42122b',
+                        },
+                        roseGold: {
+                            100: '#fdf2f4',
+                            300: '#f4b8c5',
+                            400: '#e88ba1',
+                            500: '#d95d7b',
+                            600: '#b83b5e',
+                            glow: '#ff7597'
+                        },
+                        amberGlow: '#ffd166',
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        cursive: ['Great Vibes', 'cursive'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                        desi: ['Rozha One', 'serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                        glow: {
+                            '0%': { filter: 'drop-shadow(0 0 15px rgba(232, 139, 161, 0.4))' },
+                            '100%': { filter: 'drop-shadow(0 0 35px rgba(255, 117, 151, 0.8))' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0408;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #42122b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d95d7b;
+        }
+
+        /* Ambient background grid pattern overlay */
+        .bg-pattern {
+            background-image: radial-gradient(rgba(217, 93, 123, 0.15) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        /* Glassmorphic Cards */
+        .glass-card {
+            background: rgba(24, 7, 16, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(232, 139, 161, 0.18);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8),
+                        0 0 20px 0 rgba(217, 93, 123, 0.1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(232, 139, 161, 0.4);
+            box-shadow: 0 15px 50px -10px rgba(0, 0, 0, 0.9),
+                        0 0 30px 2px rgba(217, 93, 123, 0.25);
+        }
+
+        /* Canvas full page absolute positioning */
+        #effectsCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(232, 139, 161, 0.6), 0 0 40px rgba(217, 93, 123, 0.3);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fff2f5 0%, #f4b8c5 50%, #e88ba1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .desi-gradient {
+            background: linear-gradient(135deg, #ffd166 0%, #f4b8c5 50%, #d95d7b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Tap Secret Cards Flip */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-velvet-900 text-roseGold-100 font-body selection:bg-roseGold-600 selection:text-white relative overflow-x-hidden min-h-screen">
+
+    <!-- Canvas for Floating Petals and Stars -->
+    <canvas id="effectsCanvas"></canvas>
+
+    <!-- Background Atmospheric Glow Elements -->
+    <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-roseGold-600/15 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="fixed bottom-10 right-10 w-[600px] h-[600px] bg-velvet-600/30 rounded-full blur-[160px] pointer-events-none"></div>
+
+    <!-- Sticky Audio Player Widget & Floating Controls -->
+    <div class="fixed bottom-5 right-5 z-50 flex items-center gap-3">
+        <!-- Audio Player Mockup -->
+        <div class="glass-card px-4 py-2.5 rounded-full flex items-center gap-3 border border-roseGold-400/30 shadow-2xl transition-all duration-300 hover:scale-105">
+            <div class="relative flex items-center justify-center">
+                <div id="vinylDisk" class="w-9 h-9 rounded-full bg-gradient-to-tr from-roseGold-600 to-amberGlow flex items-center justify-center shadow-lg animate-spin" style="animation-duration: 8s;">
+                    <div class="w-3 h-3 rounded-full bg-velvet-900"></div>
+                </div>
+                <div class="absolute -top-1 -right-1 flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-roseGold-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-roseGold-500"></span>
+                </div>
+            </div>
+            <div class="hidden sm:block text-left pr-2">
+                <p class="text-xs font-semibold text-roseGold-100 tracking-wide font-serif">Kesariya x Tum Se Hi</p>
+                <p class="text-[10px] text-roseGold-300/80">Desi Rom-Com Vibes • Pritam</p>
+            </div>
+            <button id="audioToggleBtn" onclick="toggleAudio()" class="w-9 h-9 rounded-full bg-roseGold-600/40 hover:bg-roseGold-500 text-roseGold-100 flex items-center justify-center transition-all duration-300 border border-roseGold-400/30">
+                <i id="audioIcon" class="fas fa-music text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN WRAPPER CONTAINER -->
+    <div class="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 py-12 flex flex-col items-center">
+
+        <!-- HEADER / CHAPTER BADGE -->
+        <header class="w-full text-center mt-6 mb-16 animate-float">
+            <!-- Wattpad Style Tag -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-velvet-800/80 border border-roseGold-400/30 backdrop-blur-md mb-6 shadow-xl">
+                <span class="text-xs font-serif tracking-widest text-amberGlow uppercase">✨ CHAPTER ∞</span>
+                <span class="text-roseGold-400/40">•</span>
+                <span class="text-xs font-body font-medium text-roseGold-300">The Unwritten Chance</span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="font-serif text-5xl sm:text-7xl font-bold tracking-tight text-glow gold-gradient-text mb-4">
+                FOR DIVYA
+            </h1>
+            
+            <p class="font-cursive text-3xl sm:text-4xl text-roseGold-400 mb-6 font-normal">
+                A promise written not in words, but in ashes and actions.
+            </p>
+
+            <!-- Decorative Divider -->
+            <div class="flex items-center justify-center gap-4 text-roseGold-500/60 my-6">
+                <div class="h-[1px] w-20 bg-gradient-to-r from-transparent to-roseGold-500/50"></div>
+                <i class="fas fa-heart text-xs text-roseGold-500 animate-pulse"></i>
+                <span class="text-sm tracking-widest text-roseGold-300 font-serif">🥀✨🖤</span>
+                <i class="fas fa-heart text-xs text-roseGold-500 animate-pulse"></i>
+                <div class="h-[1px] w-20 bg-gradient-to-l from-transparent to-roseGold-500/50"></div>
+            </div>
+
+            <!-- Trial Counter Widget -->
+            <div class="glass-card mt-8 p-4 sm:p-5 rounded-2xl max-w-md mx-auto flex items-center justify-around text-center border-amberGlow/20">
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-roseGold-300/70 block font-serif">Our Trial Period</span>
+                    <span class="text-lg font-serif font-bold text-amberGlow">Week 1 of ∞</span>
+                </div>
+                <div class="h-8 w-[1px] bg-roseGold-400/20"></div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-roseGold-300/70 block font-serif">Wall Resistance</span>
+                    <span class="text-lg font-serif font-bold text-roseGold-400">99.9% Impenetrable</span>
+                </div>
+                <div class="h-8 w-[1px] bg-roseGold-400/20"></div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-roseGold-300/70 block font-serif">My Stance</span>
+                    <span class="text-lg font-serif font-bold text-roseGold-300">Never Giving Up</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- SECTION 1: THE POV INTRO -->
+        <section class="w-full mb-16">
+            <div class="glass-card p-6 sm:p-10 rounded-3xl relative overflow-hidden border-roseGold-500/30">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-roseGold-600/10 rounded-full blur-2xl pointer-events-none"></div>
+                <i class="fas fa-quote-left text-4xl text-roseGold-500/20 absolute top-4 left-6"></i>
+                
+                <p class="font-serif text-lg sm:text-xl text-roseGold-100 leading-relaxed italic relative z-10 pt-4 font-light">Hamari jaan... krdo maaf hume... ye sb bhot dhyan se pdhna, and krna feel... bnd kaldo ye gaurds up... move on wali feeling htado, ik ki bhot kuch chal rha life mai & all.... pr meri bubu my love piliz na...♥️♥️
+<br><br>
+""So what agar dikha bhi toh? Its not like I am gonna start loving you once again. Just stop with that mindset."~~~ aur ye khooniyo wali baate mt bola kro nahi socha klo bubu...
+                </p>
+                
+                <div class="mt-6 flex justify-end items-center gap-2 text-roseGold-400 font-serif text-sm">
+                    <span class="w-8 h-[1px] bg-roseGold-400/50"></span>
+                    <span>Directly from my heart to yours</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE MONOLOGUE CARDS (Interactive Accordion / Cards) -->
+        <section class="w-full space-y-8 mb-20">
+            <div class="text-center mb-8">
+                <h2 class="font-serif text-2xl sm:text-3xl text-roseGold-200 font-semibold tracking-wide">The Monologue</h2>
+                <p class="text-xs text-roseGold-300/70 mt-1">Read carefully... every word carries the weight of my truth.</p>
+            </div>
+
+            <!-- Card 1 -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl transition-all duration-500 hover:-translate-y-1 relative group">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="w-8 h-8 rounded-full bg-roseGold-600/30 flex items-center justify-center text-roseGold-300 text-xs font-serif font-bold">01</span>
+                    <span class="text-xs font-serif tracking-widest text-roseGold-400 uppercase">Recognizing Your Silence</span>
+                </div>
+                <p class="font-body text-base sm:text-lg text-roseGold-100/90 leading-relaxed">
+                    "Main jaanta hoon, Divya... ki jab tum aaj meri taraf dekhti ho, toh tumhein mere chehre mein woh insaan nazar nahi aata jisse tumne kabhi beintehaa mohabbat ki thi. Tumhein bas woh shaks yaad aata hai jisne apne hi haathon se tumhare bharose ka katal kiya, jisne tumhare masoom se dil ko itne ghutne-tekne wale zakhm diye ki aakhirkaar tumne mehsoos karna hi chhod diya. Aur sach kahoon? Sabse zyada takleef is baat ki nahi hai ki tum mujhse naaraz ho... takleef yeh hai ki ab tumhein mujhse nafrat bhi nahi hoti. Tumhare andar sab kuch sun ho chuka hai."
+                </p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl transition-all duration-500 hover:-translate-y-1 relative group">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="w-8 h-8 rounded-full bg-roseGold-600/30 flex items-center justify-center text-roseGold-300 text-xs font-serif font-bold">02</span>
+                    <span class="text-xs font-serif tracking-widest text-roseGold-400 uppercase">Understanding Your Armor</span>
+                </div>
+                <p class="font-body text-base sm:text-lg text-roseGold-100/90 leading-relaxed">
+                    "Main samajhta hoon ki tumne apne ird-gird yeh lohe ki deewarein kyun khadi ki hain. Tumhara yeh sannata, yeh patthar jaisa roop, yeh har baat par shaq karna... yeh sab tumhari fitrat nahi, balki un zakhmon ke nishaan hain jo is zalim ne khud tumhein diye the. Tumne apne dil ko apni marzi se pathar nahi banaya, Divya; tumne use dobara kisi ke haath se tutne se bachane ke liye khud kaid kiya hai. Aur aaj agar tum mere saamne khadi hokar yeh kehti ho ki tumhein koi fark nahi padta, ki ab tumhein kuch mehsoos nahi hota—toh main tumse yeh haq bhi kaise chheen sakta hoon? Tumhein is kaid tak laane wala koi aur nahi, main khud tha."
+                </p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl transition-all duration-500 hover:-translate-y-1 relative group">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="w-8 h-8 rounded-full bg-roseGold-600/30 flex items-center justify-center text-roseGold-300 text-xs font-serif font-bold">03</span>
+                    <span class="text-xs font-serif tracking-widest text-roseGold-400 uppercase">No Entitlement, Only Penance</span>
+                </div>
+                <p class="font-body text-base sm:text-lg text-roseGold-100/90 leading-relaxed">
+                    "Lekin ek baat hai... main yahan apne purane haq jataane nahi aaya, na hi tumse woh be-panah mohabbat bheek mein maangne aaya hoon jise sambhaalne ki aukat kabhi meri thi hi nahi. Main jaanta hoon ki chand khoobsurat alfaaz, kuch rote hue waade ya yeh rom-com wali baatein tumhare guzre hue dard ka ek aansu tak nahi mita saktiyan. Tumhara bharosa koi aisi sasti cheez nahi jo mere maangne se laut aaye. Use toh mujhe apne har aane wale din mein, apni har saans ki keemat par kamaana hoga."
+                </p>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl transition-all duration-500 hover:-translate-y-1 relative group">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="w-8 h-8 rounded-full bg-roseGold-600/30 flex items-center justify-center text-roseGold-300 text-xs font-serif font-bold">04</span>
+                    <span class="text-xs font-serif tracking-widest text-roseGold-400 uppercase">This Trial is My Crucible</span>
+                </div>
+                <p class="font-body text-base sm:text-lg text-roseGold-100/90 leading-relaxed">
+                    "Yeh jo kuch hafte tumne mujhe diye hain, Divya, mere liye koi aam 'chance' nahi hain. Yeh meri zindagi ka sabse bada imtihaan hain. Main tumhare har ek shaq ko sunna chahta hoon, har us cheekh ka saamna karna chahta hoon jo tumne akele kamre mein ro-ro kar dabayi hongi. Is baar main apni safai dene nahi, tumhara woh dard apnane aaya hoon jo maine tumhe diya tha. Aur agar in chand hafton ke baad bhi tumhara yeh dil mere liye na dhadka... agar tumhein lagta hai ki main tab bhi wahi purana gunehgaar hoon, toh main tumhare faisle ko chupchap sar aankhon par rakhunga. Main tumhein dobara kisi kasoorvaar ki tarah mehsoos nahi karaunga, kyunki tumhara mujhe ek mauka dena tumhara ehsaan hai, koi majboori nahi."
+                </p>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl transition-all duration-500 hover:-translate-y-1 relative group">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="w-8 h-8 rounded-full bg-roseGold-600/30 flex items-center justify-center text-roseGold-300 text-xs font-serif font-bold">05</span>
+                    <span class="text-xs font-serif tracking-widest text-roseGold-400 uppercase">Actions Over Words</span>
+                </div>
+                <p class="font-body text-base sm:text-lg text-roseGold-100/90 leading-relaxed">
+                    "Bas... itna chahta hoon ki is baar tum mujhe mere lafzon se nahi, mere amal se pehchaano. Main tumhari khamoshi mein zabardasti apna naam nahi chhapna chahta; main khud ko itna badalna chahta hoon, itna paak aur sachcha banna chahta hoon ki ek din tumhein mere saamne khud ko mehfooz rakhne ke liye ek pal ke liye bhi sochna na pade. Main tumse yeh vaada nahi karunga ki tumhara patthar dil raaton-raat pighal hi jaayega, kyunki tumhare jazbaat par ab mera koi haq nahi bacha. Main bas yeh aakhri vaada karta hoon—is baar tumhein meri mohabbat ka bojh nahi, sirf uska sukoon mehsoos hoga. Aur agar kabhi, kisi din, tumhara yeh khali dil dobara mera naam le, toh woh kisi darr, guilt ya purani yaadon ke bojh tale nahi... balki is pure yakeen ke saath le ki jis insaan ne kabhi tumhara sab kuch tod diya tha, usne aakhirkaar tumhare liye jeena aur marna sikh liya."
+                </p>
+            </div>
+
+            <!-- Card 6 Highlight -->
+            <div class="glass-card p-8 sm:p-10 rounded-3xl border-2 border-roseGold-400/50 bg-gradient-to-br from-velvet-800/90 to-velvet-600/40 relative overflow-hidden text-center shadow-2xl">
+                <div class="absolute inset-0 bg-roseGold-500/5 pointer-events-none"></div>
+                <i class="fas fa-crown text-amberGlow text-2xl mb-4 block"></i>
+                <p class="font-serif text-xl sm:text-2xl text-roseGold-100 font-bold leading-relaxed gold-gradient-text">
+                    "Main tumhein wapas paane se pehle... woh behtareen insaan banna chahta hoon, jiske paas aane ke baad tumhein kabhi khud ko bachane ki zaroorat hi na pade."
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: INTERACTIVE SECRET PROMISES FOR DIVYA (Tap Cards) -->
+        <section class="w-full mb-20">
+            <div class="text-center mb-10">
+                <span class="text-xs font-serif tracking-widest text-amberGlow uppercase">✨ UNLOCKABLE PROMISES ✨</span>
+                <h3 class="font-serif text-2xl sm:text-3xl text-roseGold-100 font-bold mt-2">Tap a Card to Reveal My Sacred Vows</h3>
+                <p class="text-xs text-roseGold-300/70 mt-1">Little things I swear to keep every single day of our trial.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <!-- Promise Card 1 -->
+                <div onclick="flipCard(this)" class="perspective-1000 h-60 cursor-pointer group">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700 rounded-3xl">
+                        <!-- Front -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center backface-hidden border border-roseGold-500/30">
+                            <i class="fas fa-shield-halved text-3xl text-roseGold-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="font-serif font-semibold text-roseGold-100 text-lg">Safe Haven</h4>
+                            <p class="text-xs text-roseGold-300/70 mt-2">Click to flip 🖤</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center backface-hidden rotate-y-180 border border-amberGlow/40 bg-velvet-800">
+                            <p class="text-sm font-body text-roseGold-100 italic">"I will never match your frustration with anger. Your triggers are my responsibility now."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promise Card 2 -->
+                <div onclick="flipCard(this)" class="perspective-1000 h-60 cursor-pointer group">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700 rounded-3xl">
+                        <!-- Front -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center backface-hidden border border-roseGold-500/30">
+                            <i class="fas fa-hand-holding-heart text-3xl text-roseGold-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="font-serif font-semibold text-roseGold-100 text-lg">Zero Ego</h4>
+                            <p class="text-xs text-roseGold-300/70 mt-2">Click to flip 🥀</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center backface-hidden rotate-y-180 border border-amberGlow/40 bg-velvet-800">
+                            <p class="text-sm font-body text-roseGold-100 italic">"My pride died the day I realized I caused you tears. From now on, your peace comes first."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promise Card 3 -->
+                <div onclick="flipCard(this)" class="perspective-1000 h-60 cursor-pointer group">
+                    <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700 rounded-3xl">
+                        <!-- Front -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center backface-hidden border border-roseGold-500/30">
+                            <i class="fas fa-hourglass-half text-3xl text-roseGold-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="font-serif font-semibold text-roseGold-100 text-lg">Endless Patience</h4>
+                            <p class="text-xs text-roseGold-300/70 mt-2">Click to flip ✨</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center backface-hidden rotate-y-180 border border-amberGlow/40 bg-velvet-800">
+                            <p class="text-sm font-body text-roseGold-100 italic">"Take weeks, take months, take all the time you need. I'm not going anywhere."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: THE GRAND OUTRO / EPILOGUE -->
+        <section class="w-full mb-16 text-center">
+            <div class="glass-card p-8 sm:p-12 rounded-3xl border border-roseGold-400/40 relative overflow-hidden shadow-2xl">
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-roseGold-600/10 to-transparent"></div>
+                
+                <!-- Icon -->
+                <div class="w-16 h-16 rounded-full bg-roseGold-600/20 border border-roseGold-400/40 flex items-center justify-center mx-auto mb-6 text-roseGold-400 text-2xl animate-pulse">
+                    🥀
+                </div>
+
+                <!-- Outro Text -->
+                <p class="font-serif text-xl sm:text-2xl text-roseGold-100 leading-relaxed font-light mb-6">
+                    "And just like that, as I stood right there in front of her, hoping against hope that she might finally feel a faint, terrifying, yet undeniable flutter in her chest... at least for a second."
+                </p>
+
+                <!-- Desi Rom-Com Punchline -->
+                <div class="py-4 px-6 rounded-2xl bg-velvet-800/80 inline-block border border-amberGlow/30 my-2">
+                    <p class="font-desi text-2xl sm:text-3xl text-amberGlow tracking-wide desi-gradient">
+                        Maan jaa na hamari jaan saheba~! 🥀✨
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: INTERACTIVE HEART FLUTTER METER -->
+        <section class="w-full mb-20 text-center">
+            <div class="glass-card p-8 rounded-3xl border border-roseGold-500/30 max-w-2xl mx-auto">
+                <h3 class="font-serif text-xl sm:text-2xl text-roseGold-100 font-bold mb-2">Be Honest, Divya...</h3>
+                <p class="text-xs text-roseGold-300/80 mb-6">Did reading this spark even a 0.001% flutter inside that guarded heart of yours?</p>
+
+                <div class="flex flex-wrap justify-center gap-3" id="reactionButtons">
+                    <button onclick="recordReaction('tiny')" class="px-5 py-3 rounded-xl bg-velvet-800 hover:bg-roseGold-600/40 border border-roseGold-400/30 text-roseGold-100 text-xs sm:text-sm font-medium transition-all duration-300 hover:scale-105">
+                        Maybe a tiny bit 🤏
+                    </button>
+                    <button onclick="recordReaction('testing')" class="px-5 py-3 rounded-xl bg-velvet-800 hover:bg-roseGold-600/40 border border-roseGold-400/30 text-roseGold-100 text-xs sm:text-sm font-medium transition-all duration-300 hover:scale-105">
+                        Still testing you strictly 🤨
+                    </button>
+                    <button onclick="recordReaction('maangayi')" class="px-5 py-3 rounded-xl bg-gradient-to-r from-roseGold-600 to-amberGlow/80 text-white font-serif text-xs sm:text-sm font-bold shadow-lg transition-all duration-300 hover:scale-105">
+                        Maan gayi saheb 🥹🥀
+                    </button>
+                </div>
+
+                <!-- Feedback Message Container -->
+                <div id="reactionFeedback" class="hidden mt-6 p-4 rounded-xl bg-velvet-900/90 border border-amberGlow/40 text-sm font-body text-roseGold-200 transition-all duration-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="w-full text-center text-xs text-roseGold-300/50 pt-8 border-t border-roseGold-500/10">
+            <p class="font-serif">Crafted with infinite patience, deep remorse, and unwavering love for Divya.</p>
+            <p class="mt-2 text-[10px] tracking-widest uppercase">Every promise here is legally binding by heart.</p>
+        </footer>
+
+    </div>
+
+    <!-- AUDIO ELEMENT (Uses royalty-free ambient rom-com style music string) -->
+    <audio id="bgAudio" loop preload="auto">
+        <source src="brutalmog.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- INTERACTIVE JAVASCRIPT -->
+    <script>
+        // --- 1. Canvas Animation for Floating Petals and Sparkles ---
+        const canvas = document.getElementById('effectsCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // Petal & Star Particle system
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * -height;
+                this.size = Math.random() * 8 + 4;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.sin(Math.random() * Math.PI) * 1;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = (Math.random() - 0.5) * 2;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.type = Math.random() > 0.3 ? 'petal' : 'star';
+                this.color = Math.random() > 0.5 ? '#d95d7b' : '#f4b8c5';
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+
+                if (this.type === 'petal') {
+                    // Draw a soft rose petal shape
+                    ctx.beginPath();
+                    ctx.fillStyle = this.color;
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-this.size, -this.size, -this.size, this.size, 0, this.size * 1.5);
+                    ctx.bezierCurveTo(this.size, this.size, this.size, -this.size, 0, 0);
+                    ctx.fill();
+                } else {
+                    // Draw a little glowing sparkle star
+                    ctx.fillStyle = '#ffd166';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size / 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        const particles = Array.from({ length: 45 }, () => new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = function() {
+            animate();
+        };
+
+        // --- 2. Audio Toggle Functionality ---
+        const audio = document.getElementById('bgAudio');
+        const audioIcon = document.getElementById('audioIcon');
+        const vinylDisk = document.getElementById('vinylDisk');
+        let isPlaying = false;
+
+        function toggleAudio() {
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    audioIcon.className = "fas fa-pause text-xs text-amberGlow";
+                    vinylDisk.classList.add('animate-spin');
+                }).catch(e => {
+                    console.log("Audio play blocked by browser interaction policies.");
+                });
+            } else {
+                audio.pause();
+                isPlaying = false;
+                audioIcon.className = "fas fa-music text-xs";
+                vinylDisk.classList.remove('animate-spin');
+            }
+        }
+
+        // --- 3. Interactive Card Flip ---
+        function flipCard(cardElement) {
+            const inner = cardElement.querySelector('.card-inner');
+            inner.classList.toggle('rotate-y-180');
+            
+            // Create mini burst of hearts on click
+            createHeartBurst(cardElement);
+        }
+
+        function createHeartBurst(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 6; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '✨';
+                heart.className = 'fixed text-xs pointer-events-none z-50 transition-all duration-700 ease-out';
+                heart.style.left = `${rect.left + rect.width / 2}px`;
+                heart.style.top = `${rect.top + rect.height / 2}px`;
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = 50 + Math.random() * 50;
+                    heart.style.transform = `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px) scale(1.5)`;
+                    heart.style.opacity = '0';
+                }, 20);
+
+                setTimeout(() => heart.remove(), 800);
+            }
+        }
+
+        // --- 4. Reaction Meter Feedback ---
+        function recordReaction(type) {
+            const feedback = document.getElementById('reactionFeedback');
+            feedback.classList.remove('hidden');
+
+            if (type === 'tiny') {
+                feedback.innerHTML = `
+                    <p class="font-serif font-bold text-amberGlow mb-1">🤏 A tiny bit is all I need today.</p>
+                    <p>Even 0.01% is enough for me to keep trying with double the effort tomorrow. Thank you for giving me room to breathe, Divya.</p>
+                `;
+            } else if (type === 'testing') {
+                feedback.innerHTML = `
+                    <p class="font-serif font-bold text-roseGold-400 mb-1">🤨 Test me as hard as you can.</p>
+                    <p>You have every right to be skeptical. I won't just talk—watch my actions over these coming weeks. I'm ready for the exam.</p>
+                `;
+            } else if (type === 'maangayi') {
+                feedback.innerHTML = `
+                    <p class="font-serif font-bold text-amberGlow text-base mb-1">🥹 Jaan Saheba... 🥀</p>
+                    <p>If you really clicked this... know that my heart just skipped ten beats. I promise, on everything I own, I will never break your trust again.</p>
+                `;
+                // Trigger bigger celebratory burst
+                for(let i=0; i<15; i++) {
+                    setTimeout(() => {
+                        const fakeCard = document.getElementById('reactionButtons');
+                        createHeartBurst(fakeCard);
+                    }, i * 50);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
